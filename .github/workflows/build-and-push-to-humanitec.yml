@@ -1,0 +1,18 @@
+name: Build and push to Humanitec
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build and Push to Humanitec
+        uses: humanitec/build-push-to-humanitec@v1
+        with:
+          humanitec-token: ${{ secrets.HUMANITEC_TOKEN }}
+          organization: ${{ secrets.HUMANITEC_ORG }}
