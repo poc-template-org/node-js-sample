@@ -21,6 +21,7 @@ jobs:
           organization: ${{ secrets.HUMANITEC_ORG }}
 
   setup-humanitec:
+    needs: build-and-push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
