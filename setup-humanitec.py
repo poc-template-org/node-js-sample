@@ -119,3 +119,23 @@ if response.status_code==201:
     print(f"The deployment for application {humanitec_app_id} has been triggered.")
 else:
     sys.exit(f"Unable to trigger deployment. POST {url} returned status code {response.status_code}.")
+
+################################################
+# Add an auto deployment rule                  #
+################################################
+url = f"https://{humanitec_url}/orgs/{humanitec_org}/apps/{humanitec_app_id}/envs/development/rules"
+payload = {
+    "active": True,
+    "type": "update",
+    "images_filter": [
+        f"{repository_name}"
+    ],
+    "exclude_images_filter": False,
+    "update_to": "branch",
+    "match": ""
+}
+response = requests.request("POST", url, headers=headers, json=payload)
+if response.status_code==201:
+    print(f"The auto deployment rule for application {humanitec_app_id} has been created.")
+else:
+    sys.exit(f"Unable to create auto deployment rule. POST {url} returned status code {response.status_code}.")
