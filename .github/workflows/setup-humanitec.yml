@@ -1,0 +1,40 @@
+name: Setup Humanitec
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_id:
+        description: "Application ID in Humanitec"
+        required: true
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build and Push to Humanitec
+        uses: humanitec/build-push-to-humanitec@v1
+        with:
+          humanitec-token: ${{ secrets.HUMANITEC_TOKEN }}
+          organization: ${{ secrets.HUMANITEC_ORG }}
+
+  setup-humanitec:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: get repo name
+        run: echo ::set-env name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')
+      - name: Run Humanitec Setup
+        run: python setup-humanitec.py
+        env:
+          REPOSITORY_NAME: ${{ env.REPOSITORY_NAME }}
+          HUMANITEC_ORG: ${{ secrets.HUMANITEC_ORG }}
+          HUMANITEC_TOKEN: ${{ secrets.HUMANITEC_TOKEN }}
+          HUMANITEC_APP_ID: ${{ github.event.inputs.app_id }}
