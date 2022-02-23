@@ -174,7 +174,7 @@ else:
 #################################################    
 # Set app url in the github repo description    #
 #################################################
-url = f"https://api.github.com/repos/nilsty/{repository_name}"
+url = f"https://api.github.com/repos/poc-template-org/{repository_name}"
 headers = {
     'Authorization': f'Bearer {github_token}',
     'Content-Type': 'application/json'
