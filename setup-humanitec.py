@@ -9,6 +9,7 @@ try:
     humanitec_app_id = os.environ['HUMANITEC_APP_ID']
     repository_name = os.environ['REPOSITORY_NAME']
     github_token = os.environ['GITHUB_TOKEN']
+    github_org = os.environ['GITHUB_ORG']
 except Exception as e:
     print(f"Error: Could not read {e} from environment.")
     print(f"Please export {e} as environment variable.")
@@ -174,7 +175,7 @@ else:
 #################################################    
 # Set app url in the github repo description    #
 #################################################
-url = f"https://api.github.com/repos/poc-template-org/{repository_name}"
+url = f"https://api.github.com/repos/{github_org}/{repository_name}"
 headers = {
     'Authorization': f'Bearer {github_token}',
     'Content-Type': 'application/json'
