@@ -183,8 +183,8 @@ headers = {
 payload = {
     "homepage":f"https://{app_url}"
 }
-response = requests.request("POST", url, headers=headers, json=payload)
+response = requests.request("PATCH", url, headers=headers, json=payload)
 if response.status_code==200:
     print(f"Updated the repository description.")
 else:
-    sys.exit(f"Unable to update the repository description. POST {url} returned status code {response.status_code}.")
+    sys.exit(f"Unable to update the repository description. PATCH {url} returned status code {response.status_code}.")
