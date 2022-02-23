@@ -1,12 +1,14 @@
 import requests
 import os
 import sys
+import time
 
 try:
     humanitec_token = os.environ['HUMANITEC_TOKEN']
     humanitec_org = os.environ['HUMANITEC_ORG']
     humanitec_app_id = os.environ['HUMANITEC_APP_ID']
     repository_name = os.environ['REPOSITORY_NAME']
+    github_token = os.environ['GITHUB_TOKEN']
 except Exception as e:
     print(f"Error: Could not read {e} from environment.")
     print(f"Please export {e} as environment variable.")
@@ -139,3 +141,49 @@ if response.status_code==201:
     print(f"The auto deployment rule for application {humanitec_app_id} has been created.")
 else:
     sys.exit(f"Unable to create auto deployment rule. POST {url} returned status code {response.status_code}.")
+
+##################################
+# Check for deployment to finish #
+##################################
+url = f"https://{humanitec_url}/orgs/{humanitec_org}/apps/{humanitec_app_id}/envs/development"
+deployment_status = ""
+while deployment_status != "succeeded":
+    time.sleep(2)
+    response = requests.request("GET", url, headers=headers)
+    if response.status_code==200:
+        deployment_status = response.json()['last_deploy']['status']
+        print(f"Status for deployment of {humanitec_app_id}: {deployment_status}")
+        if {deployment_status} == "failed":
+            sys.exit(f"Deployment failed.")
+    else:
+        sys.exit(f"Unable to get deployment status. GET {url} returned status code {response.status_code}.")
+
+#################################################    
+# Get application runtime status and obtain url #
+#################################################
+url = f"https://{humanitec_url}/orgs/{humanitec_org}/apps/{humanitec_app_id}/envs/development/resources"
+response = requests.request("GET", url, headers=headers)
+if response.status_code==200:
+    for resource in response.json():
+        if resource['type'] == "dns":
+            app_url = resource['resource']['host']
+            print(f"You can access your application now: https://{app_url}")
+else:
+    sys.exit(f"Unable to obtain runtime status. GET {url} returned status code {response.status_code}.")
+
+#################################################    
+# Set app url in the github repo description    #
+#################################################
+url = f"https://api.github.com/repos/nilsty/{repository_name}"
+headers = {
+    'Authorization': f'Bearer {github_token}',
+    'Content-Type': 'application/json'
+}
+payload = {
+    "homepage":f"https://{app_url}"
+}
+response = requests.request("POST", url, headers=headers, json=payload)
+if response.status_code==200:
+    print(f"Updated the repository description.")
+else:
+    sys.exit(f"Unable to update the repository description. POST {url} returned status code {response.status_code}.")

@@ -43,3 +43,4 @@ jobs:
           HUMANITEC_ORG: ${{ secrets.HUMANITEC_ORG }}
           HUMANITEC_TOKEN: ${{ secrets.HUMANITEC_TOKEN }}
           HUMANITEC_APP_ID: ${{ github.event.inputs.app_id }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
