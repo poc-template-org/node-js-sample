@@ -128,15 +128,14 @@ else:
 ################################################
 url = f"https://{humanitec_url}/orgs/{humanitec_org}/apps/{humanitec_app_id}/envs/development/rules"
 payload = {
-    "active": True,
-    "type": "update",
-    "images_filter": [
-        f"{repository_name}"
+    "active": true,
+    "artefacts_filter": [
+        f"registry.humanitec.io/{humanitec_org}/{repository_name}"
     ],
-    "exclude_images_filter": False,
-    "update_to": "branch",
-    "match": ""
+    "match_ref": "refs/heads/*",
+    "type": "update"
 }
+
 response = requests.request("POST", url, headers=headers, json=payload)
 if response.status_code==201:
     print(f"The auto deployment rule for application {humanitec_app_id} has been created.")
