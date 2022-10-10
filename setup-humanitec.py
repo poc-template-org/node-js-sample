@@ -128,7 +128,7 @@ else:
 ################################################
 url = f"https://{humanitec_url}/orgs/{humanitec_org}/apps/{humanitec_app_id}/envs/development/rules"
 payload = {
-    "active": true,
+    "active": True,
     "artefacts_filter": [
         f"registry.humanitec.io/{humanitec_org}/{repository_name}"
     ],
