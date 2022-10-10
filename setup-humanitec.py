@@ -174,16 +174,19 @@ else:
 #################################################    
 # Set app url in the github repo description    #
 #################################################
-url = f"https://api.github.com/repos/{github_org}/{repository_name}"
-headers = {
-    'Authorization': f'Bearer {github_token}',
-    'Content-Type': 'application/json'
-}
-payload = {
-    "homepage":f"https://{app_url}"
-}
-response = requests.request("PATCH", url, headers=headers, json=payload)
-if response.status_code==200:
-    print(f"Updated the repository description.")
-else:
-    sys.exit(f"Unable to update the repository description. PATCH {url} returned status code {response.status_code}.")
+# The following is only available if a github personal access token is provided 
+# with repository update permissions.
+#
+# url = f"https://api.github.com/repos/{github_org}/{repository_name}"
+# headers = {
+#     'Authorization': f'Bearer {github_token}',
+#     'Content-Type': 'application/json'
+# }
+# payload = {
+#     "homepage":f"https://{app_url}"
+# }
+# response = requests.request("PATCH", url, headers=headers, json=payload)
+# if response.status_code==200:
+#     print(f"Updated the repository description.")
+# else:
+#     sys.exit(f"Unable to update the repository description. PATCH {url} returned status code {response.status_code}.")
