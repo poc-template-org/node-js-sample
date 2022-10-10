@@ -22,13 +22,14 @@ headers = {
     'Content-Type': 'application/json'
 }
 
-################################################################
-# Get information about the image / module pushed to Humanitec #
-################################################################
-url = f"https://{humanitec_url}/orgs/{humanitec_org}/images/{repository_name}"
+####################################################################
+# Get information about the container artefact pushed to Humanitec #
+####################################################################
+url = f"https://{humanitec_url}/orgs/{humanitec_org}/artefact-versions?reference=registry.humanitec.io/{humanitec_org}/{repository_name}"
 response = requests.request("GET", url, headers=headers)
 if response.status_code == 200:
-    image = response.json()['builds'][0]['image']
+    image_ref = response.json()[0]['name']
+    image_version = response.json()[0]['version']
 else:
     sys.exit(f"Unable to obtain module data. GET {url} returned status code {response.status_code}.")
 
@@ -66,8 +67,7 @@ payload = {
                         "containers": {
                             f"{repository_name}": {
                                 "files": {},
-                                "id": f"{repository_name}",
-                                "image": f"{image}",
+                                "image": f"{image_ref}:{image_version}",
                                 "resources": {
                                     "limits": {
                                         "cpu": "0.250",
